@@ -1,17 +1,13 @@
-import Navigation from "@/components/Navigation";
-import Hero from "@/components/Hero";
-import Features from "@/components/Features";
-import ApiSection from "@/components/ApiSection";
-import Footer from "@/components/Footer";
+import ChatNavigation from "@/components/ChatNavigation";
+import ChatInterface from "@/components/ChatInterface";
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-background">
-      <Navigation />
-      <Hero />
-      <Features />
-      <ApiSection />
-      <Footer />
+    <div className="min-h-screen bg-background">
+      <ChatNavigation />
+      <div className="pt-16">
+        <ChatInterface />
+      </div>
     </div>
   );
 };
