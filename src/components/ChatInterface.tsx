@@ -40,17 +40,38 @@ const ChatInterface = () => {
     setInput("");
     setIsLoading(true);
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      // Import the OpenAI function
+      const { sendChatMessage } = await import("@/lib/openai");
+      
+      // Convert messages to the format expected by OpenAI
+      const chatMessages = [...messages, userMessage].map(msg => ({
+        role: msg.sender === "user" ? "user" as const : "assistant" as const,
+        content: msg.content
+      }));
+
+      const response = await sendChatMessage(chatMessages);
+      
       const assistantMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "I'm a demo ChatGPT interface. In a real implementation, this would connect to OpenAI's API to provide actual AI responses. Your message was: \"" + userMessage.content + "\"",
+        content: response,
         sender: "assistant",
         timestamp: new Date(),
       };
+      
       setMessages(prev => [...prev, assistantMessage]);
+    } catch (error) {
+      console.error('Error sending message:', error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "Sorry, I encountered an error. Please make sure your OpenAI API key is configured in Supabase secrets.",
+        sender: "assistant",
+        timestamp: new Date(),
+      };
+      setMessages(prev => [...prev, errorMessage]);
+    } finally {
       setIsLoading(false);
-    }, 1000);
+    }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
